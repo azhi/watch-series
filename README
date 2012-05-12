@@ -1,0 +1,3 @@
+watch script is a script that connect to http://myshows.ru API, get the episodes that you doesn't watch and tries to find and lauch specified show episodes, and then checks it as watched
+Using: watch <showname>
+showname must be specified in guws constant SERIAL_IDS, and in bash completion

@@ -1,0 +1,15 @@
+#! /bin/bash
+
+episode=$(guws $1)
+if [ -n "$episode" ]
+then
+  flm $episode
+  episode=($episode)
+
+  echo -n "Do you want to mark the episode watched? (y/n) "
+  read choice
+  if [ $choice == "y" ]
+  then
+    checkep ${episode[3]}
+  fi  
+fi

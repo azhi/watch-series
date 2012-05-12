@@ -1,0 +1,32 @@
+#! /bin/bash
+
+player=smplayer
+#player=mplayer
+
+findpath="/home/azhi/ /mnt/f/films/\!Serials/"
+
+regex='.*'$1'.*S.*'$2'.*E.*'$3'.*\.\(avi\|mp4\|mkv\)'
+path2video=$(find $findpath -iregex $regex 2> /dev/null)
+regex='.*'$1'.*'$2'.*'$3'.*\.srt'
+path2sub=$(find $findpath -iregex $regex 2> /dev/null)
+IFS=$'\n'
+path2video=($path2video)
+path2video=${path2video[0]}
+path2sub=($path2sub)
+path2sub=${path2sub[0]}
+
+echo $path2video
+if [ -z "$path2video" ]
+then
+  echo "Can't find episode. Params: name - $1, season - $2, episode - $3" > /dev/fd/2
+  exit
+fi 
+
+echo $path2sub
+if [ -n "$path2sub" ]
+then
+  $player -sub $path2sub $path2video
+else
+  echo "Can't find subs. Running without..." > /dev/fd/2
+  $player $path2video
+fi

@@ -1,0 +1,15 @@
+# bash completion for watch
+
+have watch &&
+_watch()  { 
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    subcommands="supernatural fringe house"
+
+    if [[ ${COMP_CWORD} == 1 ]]
+    then
+        COMPREPLY=( $(compgen -W "${subcommands}" -- ${cur}) )
+        return 0
+    fi
+} &&
+complete -F _watch watch

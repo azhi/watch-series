@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'net/http'
+require 'uri'
+
+LOGIN = 'login'
+PWD_MD5 = 'just67ad64e471somed95gr46f5hash2'
+
+if ARGV.empty?
+  $stderr.puts "Wrong params. Usage: checkep ep_id"
+  exit
+end
+
+http = Net::HTTP.new('api.myshows.ru')
+
+req = Net::HTTP::Post.new( '/profile/login' )
+req.set_form_data('login' => LOGIN, 'password' => PWD_MD5)
+res = http.request(req)
+cookie = res.response['set-cookie'].split('; ')[0]
+if res.code != '200'
+    $stderr.puts "Can't connect to myshows. Terminating"
+    exit
+end
+
+res = http.get("/profile/episodes/check/#{ARGV[0]}", { 'Cookie' => cookie })
+if res.code != '200'
+    $stderr.puts "Can't check episode with id #{ARGV[0]}. Error: #{res.code} #{res.msg}"
+    exit
+end
