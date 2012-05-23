@@ -17,11 +17,11 @@ http = Net::HTTP.new('api.myshows.ru')
 req = Net::HTTP::Post.new( '/profile/login' )
 req.set_form_data('login' => LOGIN, 'password' => PWD_MD5)
 res = http.request(req)
-cookie = res.response['set-cookie'].split('; ')[0]
 if res.code != '200'
     $stderr.puts "Can't connect to myshows. Terminating"
     exit
 end
+cookie = res.response['set-cookie'].split('; ')[0]
 
 res = http.get("/profile/episodes/check/#{ARGV[0]}", { 'Cookie' => cookie })
 if res.code != '200'

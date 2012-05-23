@@ -7,7 +7,7 @@ require 'json'
 
 LOGIN = 'login'
 PWD_MD5 = 'just67ad64e471somed95gr46f5hash2'
-SERIAL_IDS = { 'house' => '1', 'fringe' => '48', 'supernatural' => '45'}
+SERIAL_IDS = { 'house' => 1, 'fringe' => 48, 'supernatural' => 45, 'sanctuary' => 570 }
 
 if ARGV.empty?
   $stderr.puts "Wrong params. Usage: guws showname"
@@ -19,11 +19,11 @@ http = Net::HTTP.new('api.myshows.ru')
 req = Net::HTTP::Post.new( '/profile/login' )
 req.set_form_data('login' => LOGIN, 'password' => PWD_MD5)
 res = http.request(req)
-cookie = res.response['set-cookie'].split('; ')[0]
 if res.code != '200'
     $stderr.puts "Can't connect to myshows. Terminating"
     exit
 end
+cookie = res.response['set-cookie'].split('; ')[0]
 
 
 res = http.get('/profile/episodes/unwatched/', { 'Cookie' => cookie }) 
@@ -36,10 +36,18 @@ end
 
 id2found = SERIAL_IDS[ARGV[0]]
 
-watching_episode = unwatched.map{|ar| ar[1]}.find_all{ |ep|  "#{ep['showId']}" == "#{id2found}" }.min_by{ |ep| ep['episodeNumber'] }
+unwatched_show = unwatched.map{|ar| ar[1]}.find_all{ |ep|  ep['showId'] == id2found }
+if unwatched_show.empty?
+  $stderr.puts "No episodes for show '#{ARGV[0]}'"
+  exit
+end   
 
+watching_season = unwatched_show.min_by{ |ep| ep['seasonNumber'] }['seasonNumber']
+watching_episode = unwatched_show.find_all{ |ep| ep['seasonNumber'] == watching_season }
+                                 .min_by{ |ep| ep['episodeNumber'] }
+                                 
 if watching_episode.nil?
-  $stderr.puts "No episodes for show #{ARGV[0]}"
+  $stderr.puts "No episodes for show '#{ARGV[0]}'"
   exit
 end  
 

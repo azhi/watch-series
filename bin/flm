@@ -3,7 +3,7 @@
 player=smplayer
 #player=mplayer
 
-findpath="/home/azhi/ /mnt/f/films/\!Serials/"
+findpath="/home/azhi/ /mnt/f/Films/!Serials/"
 
 regex='.*'$1'.*S.*'$2'.*E.*'$3'.*\.\(avi\|mp4\|mkv\)'
 path2video=$(find $findpath -iregex $regex 2> /dev/null)

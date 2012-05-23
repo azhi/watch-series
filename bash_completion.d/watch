@@ -4,7 +4,7 @@ have watch &&
 _watch()  { 
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
-    subcommands="supernatural fringe house"
+    subcommands="supernatural fringe house sanctuary"
 
     if [[ ${COMP_CWORD} == 1 ]]
     then
